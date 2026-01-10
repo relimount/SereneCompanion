@@ -3,7 +3,7 @@
     <div class="header-content">
       <!-- 左侧折叠按钮 -->
       <div class="header-left flex-box">
-        <el-icon class="header-icon" size="20">
+        <el-icon class="header-icon" size="20" @click="toggleSidebar">
           <Fold />
         </el-icon>
       </div>
@@ -28,7 +28,14 @@
 </template>
 
 <script setup>
+import { useSidebarStore } from '@/store/sidebar'
 
+const sidebarStore = useSidebarStore()
+
+// 折叠/展开侧边栏
+const toggleSidebar = () => {
+  sidebarStore.toggleCollapse()
+}
 </script>
 
 <style lang="scss" scoped>

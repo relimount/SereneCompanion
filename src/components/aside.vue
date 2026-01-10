@@ -1,48 +1,33 @@
 <template>
       <el-menu
-        :style = "{ width : '230px'}"
+        :style = "{ width : menuWidth }"
         active-text-color="#ffd04b"
         background-color="#545c64"
         class="el-menu-vertical-demo"
         default-active="2"
         text-color="#fff"
-        @open="handleOpen"
-        @close="handleClose"
+        :collapse="sidebarStore.isCollapse"
       >
-        <h2 class="title">安心伴</h2>
+        <h2 class="title">{{ sidebarStore.isCollapse ? 'DIDI' : 'DIDI陪诊' }}</h2>
         <treeMenu :menuData="menuData" :index="1"></treeMenu>
       </el-menu>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 import treeMenu from './treeMenu.vue'
 
 import { useRouter } from 'vue-router'
 
+import { useSidebarStore } from '@/store/sidebar'
+const sidebarStore = useSidebarStore()
+const menuWidth = computed(() => {
+  return sidebarStore.isCollapse ? '60px' : '230px'
+})
+
 const router = useRouter()
 const menuData = reactive(router.options.routes[0].children)
-
-const isCollapse = ref(true)
-
-const handleOpen = (key) => {
-  if (key === '1') {
-    isCollapse.value = false
-  } else {
-    isCollapse.value = true
-  }
-}
-
-const handleClose = (key) => {
-  if (key === '1') {
-    isCollapse.value = false
-  } else {
-    isCollapse.value = true
-  }
-}
-
-
 </script>
 
 <style lang="scss" scoped>
