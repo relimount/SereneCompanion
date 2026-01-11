@@ -28,6 +28,7 @@
 
 <script setup>
   import { useRouter } from 'vue-router'
+  import { useAddMenuStore } from '@/store/addmenu'
   const router = useRouter()
 const props = defineProps({
   menuData: {
@@ -42,5 +43,7 @@ const props = defineProps({
 
 const handleClick = (item, index) => {
   router.push(item.meta.path)
+  const addMenuStore = useAddMenuStore()
+  addMenuStore.addMenu(item)
 }
 </script>
