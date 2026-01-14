@@ -9,7 +9,11 @@
       <div class="jump-link">
           <el-link type="primary" @click="handleSwitch">{{ formType ? '立即注册' : '返回登录' }}</el-link>
         </div>
-        <el-form :model="formData" :rules="rules"> 
+        <el-form 
+          ref="loginForm" 
+          :model="formData" 
+          :rules="rules"
+        > 
           <el-form-item prop="username"> 
             <el-input v-model="formData.username" placeholder="请输入用户名" :prefix-icon="UserFilled" ></el-input>
           </el-form-item>
@@ -28,7 +32,11 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleSubmit" :style = "{ width: '100%' }">
+            <el-button 
+              type="primary" 
+              @click="handleSubmit(loginForm)" 
+              :style = "{ width: '100%' }"
+            >
               {{ formType ? '登录' : '注册' }}
             </el-button>
           </el-form-item>
@@ -41,8 +49,10 @@
   import { ref, reactive } from 'vue'
   import { UserFilled, Lock } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
-  import { getCode } from '@/api/index'
+  import { getCode, userAuthentication } from '@/api/index'
   const imgUrl = new URL('@/assets/images/login-head.png', import.meta.url).href
+
+  const loginForm = ref()
   //定义状态，0为注册，1为登录
   const formType = ref(0)
   const handleSwitch = () => {
@@ -134,7 +144,35 @@
   }
 
   //表单提交
-  const handleSubmit = () => {}
+  const handleSubmit = async (formRef) => {
+    if(!formRef) return
+    
+    await formRef.validate((valid) => {
+      if (valid) {
+        if(formType.value === 0){
+          //注册
+          userAuthentication({
+            userName: formData.value.username,
+            passWord: formData.value.password,
+            validCode: formData.value.code
+          }).then(({ data }) => {
+            if (data.code === 10000) {
+              ElMessage.success('注册成功')
+              handleSwitch()
+            } else {
+              ElMessage.error(data.message.msg )
+            }
+          }).catch(error => {
+            ElMessage.error('网络错误，注册失败')
+          })
+        }else{
+          //登录
+        }
+      } else {
+        ElMessage.error('表单验证失败')
+      }
+    })
+  }
 </script>
 
 <style lang="scss" scoped>
