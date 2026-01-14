@@ -41,6 +41,7 @@
   import { ref, reactive } from 'vue'
   import { UserFilled, Lock } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
+  import { getCode } from '@/api/index'
   const imgUrl = new URL('@/assets/images/login-head.png', import.meta.url).href
   //定义状态，0为注册，1为登录
   const formType = ref(0)
@@ -117,6 +118,19 @@
         sendCode.validText = `${sendCode.count}秒后重新发送`
       }
     }, 1000)
+
+    // 发送验证码请求
+    getCode({
+      tel: formData.value.username
+    }).then(({ data }) => {
+      if (data.code === 10000) {
+        ElMessage.success('验证码发送成功')
+      } else {
+        ElMessage.error(data.message || '验证码发送失败')
+      }
+    }).catch(error => {
+      ElMessage.error('网络错误，验证码发送失败')
+    })
   }
 
   //表单提交
