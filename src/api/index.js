@@ -17,3 +17,12 @@ export function userAuthentication(data) {
         data
     })
 }
+
+//用户登录
+export function login(data) {
+    return request({
+        url: '/login',
+        method: 'post',
+        data
+    })
+}

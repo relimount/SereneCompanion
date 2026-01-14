@@ -49,7 +49,7 @@
   import { ref, reactive } from 'vue'
   import { UserFilled, Lock } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
-  import { getCode, userAuthentication } from '@/api/index'
+  import { getCode, userAuthentication, login } from '@/api/index'
   const imgUrl = new URL('@/assets/images/login-head.png', import.meta.url).href
 
   const loginForm = ref()
@@ -167,6 +167,20 @@
           })
         }else{
           //登录
+          login({
+            userName: formData.value.username,
+            passWord: formData.value.password
+          }).then(({ data }) => {
+            if (data.code === 10000) {
+              ElMessage.success('登录成功')
+              localStorage.setItem('pz_token', data.data.token)
+              localStorage.setItem('pz_userinfo', JSON.stringify(data.data.userInfo))
+            } else {
+              ElMessage.error(data.message.msg)
+            }
+          }).catch(error => {
+            ElMessage.error('网络错误，登录失败')
+          })
         }
       } else {
         ElMessage.error('表单验证失败')

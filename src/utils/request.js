@@ -14,7 +14,7 @@ axios.interceptors.request.use(function (config) {
     const whiteUrl = ['/get/code', '/user/authentication','/login']
 
     if (token && !whiteUrl.includes(config.url)) {
-      config.headers['X-token'] = token
+      config.headers['x-token'] = token
     }
     
     return config;
