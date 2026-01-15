@@ -30,7 +30,7 @@
       <el-avatar
         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
       />
-      <p class="username">用户名</p>
+      <p class="username">{{ username }}</p>
     </span>
     <template #dropdown>
       <el-dropdown-menu>
@@ -128,6 +128,20 @@ const handleLogout = () => {
   // 跳转到登录页面
   router.push('/login')
 }
+
+//用户名
+const username = computed(() => {
+  // 从localStorage中获取用户信息
+  const userInfo = JSON.parse(localStorage.getItem('pz_userinfo'))
+  
+  // 如果用户信息存在，返回用户名
+  if (userInfo && userInfo.name) {
+    return userInfo.name
+  }
+  
+  // 如果用户信息不存在，返回默认值
+  return '用户'
+})
 </script>
 
 <style lang="scss" scoped>
