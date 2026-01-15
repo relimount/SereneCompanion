@@ -1,8 +1,36 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 export const useAddMenuStore = defineStore('addMenu', () => {
-    const selectedMenu = ref([])
+    // 本地存储键名
+    const STORAGE_KEY = 'pz_selected_menu'
+    
+    // 从本地存储中恢复数据，如果没有则使用空数组
+    const restoreSelectedMenu = () => {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY)
+            if (stored) {
+                return JSON.parse(stored)
+            }
+        } catch (error) {
+            console.error('从本地存储恢复已选菜单失败:', error)
+        }
+        return []
+    }
+    
+    // 初始化selectedMenu，从本地存储中恢复数据
+    const selectedMenu = ref(restoreSelectedMenu())
+    
+    // 监听selectedMenu的变化，持久化到本地存储
+    watch(selectedMenu, (newValue) => {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newValue))
+            console.log('已选菜单已持久化到本地存储')
+        } catch (error) {
+            console.error('已选菜单持久化到本地存储失败:', error)
+        }
+    }, { deep: true })
+    
     const addMenu = (menu) => {
         // 添加详细调试信息
         console.log('尝试添加的菜单:', menu.name, 'ID:', menu.meta.id)
