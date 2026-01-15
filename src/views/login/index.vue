@@ -47,10 +47,14 @@
 
 <script setup>
   import { ref, reactive } from 'vue'
+  import { useRouter } from 'vue-router'
   import { UserFilled, Lock } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
   import { getCode, userAuthentication, login } from '@/api/index'
   const imgUrl = new URL('@/assets/images/login-head.png', import.meta.url).href
+
+  //获取路由实例
+  const router = useRouter()
 
   const loginForm = ref()
   //定义状态，0为注册，1为登录
@@ -175,6 +179,10 @@
               ElMessage.success('登录成功')
               localStorage.setItem('pz_token', data.data.token)
               localStorage.setItem('pz_userinfo', JSON.stringify(data.data.userInfo))
+              // 1秒后跳转到首页
+              setTimeout(() => {
+                router.push('/')
+              }, 800)
             } else {
               ElMessage.error(data.message.msg)
             }

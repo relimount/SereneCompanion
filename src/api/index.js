@@ -26,3 +26,39 @@ export function login(data) {
         data
     })
 }
+
+//权限管理列表
+export function authAdmin(data) {
+    return request({
+        url: '/auth/admin',
+        method: 'get',
+        params: data
+    })
+}
+
+//菜单权限数据获取
+export function getMenu(data) {
+    return request({
+        url: '/user/getmenu',
+        method: 'get',
+        params: data
+    })
+}
+
+//菜单权限修改
+export function setMenu(data) {
+    return request({
+        url: '/user/setmenu',
+        method: 'post',
+        data
+    })
+}
+
+//菜单权限列表
+export function menuList(data) {
+    return request({
+        url: '/menu/list',
+        method: 'get',
+        params: data
+    })
+}

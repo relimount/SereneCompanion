@@ -7,7 +7,7 @@ const http = axios.create({
 })
 
 // 添加请求拦截器
-axios.interceptors.request.use(function (config) {
+http.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     const token = localStorage.getItem('pz_token')
 
@@ -24,10 +24,14 @@ axios.interceptors.request.use(function (config) {
   });
 
 // 添加响应拦截器
-axios.interceptors.response.use(function (response) {
+http.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     if (response.data.code === -1) {
       ElMessage.warning(response.data.message)
+    }else if (response.data.code === -2) {
+      localStorage.removeItem('pz_token')
+      localStorage.removeItem('pz_userinfo')
+      window.location.href = window.location.origin + '/login'
     }
 
     return response;
