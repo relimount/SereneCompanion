@@ -71,7 +71,25 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   
-  // 6. 如果菜单数据已存在，直接放行
+  // 6. 如果用户访问的是根路径'/'，重定向到第一个有权限的菜单
+  if (to.path === '/') {
+    // 获取用户的第一个有权限的菜单
+    const firstMenu = sidebarStore.getFirstPermissionMenu()
+    
+    if (firstMenu && firstMenu.meta && firstMenu.meta.path) {
+      // 导入需要的store
+      const { useAddMenuStore } = await import('./store/addmenu')
+      const addMenuStore = useAddMenuStore()
+      
+      // 将第一个菜单添加到顶部菜单栏
+      addMenuStore.addMenu(firstMenu)
+      
+      // 重定向到第一个有权限的菜单
+      return next(firstMenu.meta.path)
+    }
+  }
+  
+  // 7. 如果菜单数据已存在且不是根路径，直接放行
   next()
 })
 

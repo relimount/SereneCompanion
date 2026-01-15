@@ -191,6 +191,8 @@
                   useSidebarStore().routerList.forEach(item => {
                     router.addRoute('main',item)
                   })
+                  
+                  // 跳转到根路径，由路由守卫处理重定向到第一个有权限的菜单
                   router.push('/')
                 }
               })

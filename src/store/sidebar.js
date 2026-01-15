@@ -36,6 +36,28 @@ export const useSidebarStore = defineStore('sidebar', () => {
         routerList.value = menu
     }
     
+    // 获取用户的第一个有权限的菜单
+    const getFirstPermissionMenu = () => {
+        // 递归查找第一个没有子菜单的菜单
+        const findFirstMenu = (menus) => {
+            for (const menu of menus) {
+                // 如果当前菜单没有子菜单，返回该菜单
+                if (!menu.children || (Array.isArray(menu.children) && menu.children.length === 0)) {
+                    return menu
+                }
+                
+                // 如果有子菜单，递归查找
+                const childMenu = findFirstMenu(menu.children)
+                if (childMenu) {
+                    return childMenu
+                }
+            }
+            return null
+        }
+        
+        return findFirstMenu(routerList.value)
+    }
+    
   // 更新当前激活的菜单
   const updateActiveMenu = () => {
     const currentPath = router.currentRoute.value.path
@@ -53,6 +75,7 @@ export const useSidebarStore = defineStore('sidebar', () => {
     routerList, 
     dynamicAddMenu, 
     activeMenu, 
-    updateActiveMenu 
+    updateActiveMenu,
+    getFirstPermissionMenu
   }
 })
