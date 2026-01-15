@@ -29,7 +29,7 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>退出登录</el-dropdown-item>
+        <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -100,6 +100,19 @@ const removeSelectedMenu = (item) => {
   if (needNavigate) {
     router.push(targetPath)
   }
+}
+
+// 退出登录
+const handleLogout = () => {
+  // 移除localStorage中的token和用户信息
+  localStorage.removeItem('pz_token')
+  localStorage.removeItem('pz_userinfo')
+  
+  // 清空已选菜单（直接修改selectedMenu数组）
+  addMenuStore.selectedMenu = []
+  
+  // 跳转到登录页面
+  router.push('/login')
 }
 </script>
 

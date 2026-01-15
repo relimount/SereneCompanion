@@ -36,7 +36,7 @@ const props = defineProps({
     default: () => []
   },
   index: {
-    type: Number,
+    type: [Number, String], // 允许index接受数字或字符串类型
     default: 0
   }
 })

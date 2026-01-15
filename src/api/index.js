@@ -62,3 +62,28 @@ export function menuList(data) {
         params: data
     })
 }
+
+//菜单权限下拉列表
+export function menuSelectList() {
+    return request({
+        url: '/menu/selectlist',
+        method: 'get',
+    })
+}
+
+//用户信息更新
+export function updateUser(data) {
+    return request({
+        url: '/update/user',
+        method: 'post',
+        data
+    })
+}
+
+//用户菜单权限详情
+export function menuPermissions() {
+    return request({
+        url: '/menu/permissions',
+        method: 'get',
+    })
+}

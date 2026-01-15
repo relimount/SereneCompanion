@@ -46,11 +46,13 @@
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue'
+  import { ref, reactive, computed , toRaw } from 'vue'
   import { useRouter } from 'vue-router'
   import { UserFilled, Lock } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
-  import { getCode, userAuthentication, login } from '@/api/index'
+  import { getCode, userAuthentication, login, menuPermissions } from '@/api/index'
+  import { useSidebarStore } from '@/store/sidebar'
+
   const imgUrl = new URL('@/assets/images/login-head.png', import.meta.url).href
 
   //获取路由实例
@@ -147,6 +149,8 @@
     })
   }
 
+  const routerList = computed(() => useSidebarStore().routerList)
+
   //表单提交
   const handleSubmit = async (formRef) => {
     if(!formRef) return
@@ -179,10 +183,18 @@
               ElMessage.success('登录成功')
               localStorage.setItem('pz_token', data.data.token)
               localStorage.setItem('pz_userinfo', JSON.stringify(data.data.userInfo))
-              // 1秒后跳转到首页
-              setTimeout(() => {
-                router.push('/')
-              }, 800)
+              menuPermissions().then(({ data }) => { 
+                if(data.code === 10000){
+                  useSidebarStore().dynamicAddMenu(data.data)
+                  console.log('动态添加菜单:', useSidebarStore().routerList)
+                  // 直接使用routerList，Pinia会自动解包，不需要.value
+                  useSidebarStore().routerList.forEach(item => {
+                    router.addRoute('main',item)
+                  })
+                  router.push('/')
+                }
+              })
+              
             } else {
               ElMessage.error(data.message.msg)
             }

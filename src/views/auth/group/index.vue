@@ -1,7 +1,10 @@
 <template>
-  <panel-head></panel-head>
+  <panel-head 
+      title="菜单管理" 
+      description="菜单规则通常对应一个控制器的方法，同时菜单栏数据也从规则中获取"
+    />
   <div class="btn">
-    <el-button :incon = "Plus" type="primary" @click="handleAdd" size="small">新增</el-button>
+    <el-button :icon="Plus" type="primary" @click="handleAdd" size="small">新增</el-button>
   </div>
   <el-table 
   :data="tableData.list"
@@ -25,6 +28,7 @@
       </template>
     </el-table-column>
   </el-table>
+  <!-- 分页 -->
   <div class="pagination-info">
     <el-pagination
       v-model:current-page="paginationData.pageNum"
@@ -37,7 +41,7 @@
       @current-change="handleCurrentChange"
     />
   </div>
-  
+  <!-- 弹窗 -->
   <el-dialog
     v-model="dialogVisible"
     title="添加权限"
@@ -95,6 +99,7 @@
   import { ElMessage } from 'element-plus'
   import { getMenu,setMenu,menuList } from '@/api/index'
   import panelHead from '@/components/panelHead.vue'
+  import { Plus } from '@element-plus/icons-vue'
 
   onMounted(() => {
     getMenu().then(({ data }) => {

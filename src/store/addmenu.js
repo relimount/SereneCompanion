@@ -21,5 +21,28 @@ export const useAddMenuStore = defineStore('addMenu', () => {
         return true
     }
 
-    return { selectedMenu, addMenu, removeMenu }
+    const dynamicAddMenu = (menu) => {
+        const modules = import.meta.glob('../views/**/**/*.vue')
+        console.log(modules,"动态添加菜单模块")
+        function routerSet(router){
+            router.forEach(item=>{
+                if(!item.children){
+                    const url = `../views${item.meta.path}/index.vue`
+                    item.component = modules[url]
+                }else{
+                    routerSet(item.children)
+                }
+            })
+        }
+        routerSet(menu)
+        selectedMenu.value = menu
+    }
+
+    // 清空已选菜单
+    const clearSelectedMenu = () => {
+        selectedMenu.value = []
+        return true
+    }
+
+    return { selectedMenu, addMenu, removeMenu, clearSelectedMenu ,dynamicAddMenu}
 })

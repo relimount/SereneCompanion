@@ -14,20 +14,20 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import {  computed } from 'vue'
 
 import treeMenu from './treeMenu.vue'
 
-import { useRouter } from 'vue-router'
-
 import { useSidebarStore } from '@/store/sidebar'
+
 const sidebarStore = useSidebarStore()
 const menuWidth = computed(() => {
   return sidebarStore.isCollapse ? '60px' : '230px'
 })
 
-const router = useRouter()
-const menuData = reactive(router.options.routes[0].children)
+const menuData = computed(() => {
+  return useSidebarStore().routerList
+})
 </script>
 
 <style lang="scss" scoped>
