@@ -14,31 +14,35 @@
 </template>
 
 <script setup>
-import {  computed } from 'vue'
+import {  computed, onMounted } from 'vue'
 
 import treeMenu from './treeMenu.vue'
 
 import { useSidebarStore } from '@/store/sidebar'
 
 const sidebarStore = useSidebarStore()
+
+const menuData = computed(() => {
+  // 添加调试日志，查看菜单数据结构
+  console.log('菜单数据:', sidebarStore.routerList)
+  return sidebarStore.routerList
+})
+
+// 计算菜单宽度
 const menuWidth = computed(() => {
   return sidebarStore.isCollapse ? '60px' : '230px'
 })
 
-const menuData = computed(() => {
-  return useSidebarStore().routerList
+onMounted(() => {
+  // 在组件挂载后检查菜单数据
+  console.log('挂载时的菜单数据:', sidebarStore.routerList)
 })
 </script>
 
 <style lang="scss" scoped>
-.el-menu-vertical-demo {
-  height: 100%;
-  .title {
-    font-size: 20px;
-    text-align: center;
-    height: 50px;
-    line-height: 50px;
-    color: #fff;
-  }
+.title {
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
 }
 </style>

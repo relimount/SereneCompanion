@@ -7,7 +7,12 @@
           <Fold />
         </el-icon>
         <ul class="selected-menu flex-box">
-          <li v-for="item in selectedMenu" :key="item.meta.id" @click="navigateToPage(item)">
+          <li 
+            v-for="item in selectedMenu" 
+            :key="item.meta.id" 
+            @click="navigateToPage(item)"
+            :class="{ 'active-menu': isActiveMenu(item) }"
+          >
             <el-icon class="icon-menu" size="12">
               <component :is="item.meta.icon" />
             </el-icon>
@@ -102,6 +107,15 @@ const removeSelectedMenu = (item) => {
   }
 }
 
+// 判断菜单项是否为当前活跃菜单
+const isActiveMenu = (item) => {
+  // 获取当前路由路径
+  const currentPath = router.currentRoute.value.path
+  
+  // 比较菜单项的路径和当前路由路径
+  return currentPath === item.meta.path
+}
+
 // 退出登录
 const handleLogout = () => {
   // 移除localStorage中的token和用户信息
@@ -146,7 +160,7 @@ const handleLogout = () => {
                 padding: 0 10px;
                 background-color: #fff;
                 cursor: pointer;
-
+                
                 .close-icon{
                     margin-left: 5px;
                     visibility: hidden;
@@ -159,6 +173,17 @@ const handleLogout = () => {
                         visibility: visible;
                         cursor: pointer;
                     }
+                }
+                
+                &.active-menu {
+                  background-color: #e6f7ff;
+                  color: #1890ff;
+                  border-bottom: 2px solid #1890ff;
+                }
+                
+                &.active-menu:hover {
+                  background-color: #e6f7ff;
+                  color: #1890ff;
                 }
             }
             

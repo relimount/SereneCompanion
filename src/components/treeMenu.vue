@@ -1,7 +1,8 @@
 <template>
         <template v-for="(item,index) in props.menuData">
+          <!-- 无子菜单的菜单项 -->
           <el-menu-item 
-          v-if = "!item.children || item.children.length === 0"
+          v-if = "!item.children || (Array.isArray(item.children) && item.children.length === 0)"
           :index="`${props.index} - ${item.meta.id}`"
           :key="`${props.index} - ${item.meta.id}`"
           @click="handleClick(item,`${props.index} - ${item.meta.id}`)"
@@ -11,6 +12,7 @@
             </el-icon>
             <span>{{ item.meta.name }}</span>
           </el-menu-item>
+          <!-- 有子菜单的菜单项 -->
           <el-sub-menu
           v-else
           :index="`${props.index} - ${item.meta.id}`"
@@ -42,8 +44,28 @@ const props = defineProps({
 })
 
 const handleClick = (item, index) => {
-  router.push(item.meta.path)
+  // 添加调试日志
+  console.log('点击的菜单:', item)
+  console.log('菜单是否有子菜单:', Array.isArray(item.children) && item.children.length > 0)
+  console.log('菜单路径:', item.meta.path)
+  
+  // 确保菜单数据结构一致
+  const menuData = {
+    ...item,
+    children: Array.isArray(item.children) ? item.children : []
+  }
+  
+  // 如果有路径，导航到对应页面
+  if (item.meta && item.meta.path) {
+    router.push(item.meta.path)
+  }
+  
+  // 创建addMenuStore实例
   const addMenuStore = useAddMenuStore()
-  addMenuStore.addMenu(item)
+  
+  // 添加菜单到导航栏
+  const result = addMenuStore.addMenu(menuData)
+  console.log('添加菜单结果:', result)
+  console.log('当前已选菜单:', addMenuStore.selectedMenu)
 }
 </script>
