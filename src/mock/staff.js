@@ -181,3 +181,38 @@ export const mockDeleteStaff = (id) => {
     }, 500)
   })
 }
+
+// 模拟批量删除陪护人员
+export const mockBatchDeleteStaff = (ids) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // 从localStorage获取已存在的数据
+      let allStaffData = localStorage.getItem('staffData')
+      if (!allStaffData) {
+        // 如果没有数据，直接返回成功
+        resolve({
+          code: 10000,
+          message: '批量删除成功'
+        })
+        return
+      }
+      
+      allStaffData = JSON.parse(allStaffData)
+      
+      // 过滤掉要删除的数据
+      const originalLength = allStaffData.list.length
+      allStaffData.list = allStaffData.list.filter(item => !ids.includes(item.id))
+      
+      // 更新总数
+      allStaffData.total -= (originalLength - allStaffData.list.length)
+      
+      // 保存到localStorage
+      localStorage.setItem('staffData', JSON.stringify(allStaffData))
+      
+      resolve({
+        code: 10000,
+        message: '批量删除成功'
+      })
+    }, 500)
+  })
+}

@@ -5,7 +5,7 @@
     />
   <div class="btn">
     <el-button :icon="Plus" type="primary" @click="handleAdd" size="small">新增</el-button>
-    <el-button :icon="Delete" type="danger" @click="handleDelete" size="small">删除</el-button>
+    <el-button :icon="Delete" type="danger" @click="handleBatchDelete" size="small">删除</el-button>
   </div>
   
   <!-- 表格 -->
@@ -13,7 +13,9 @@
     :data="tableData.list"
     style="width: 100%"
     v-loading="tableLoading"
+    @selection-change="handleSelectionChange"
   >
+    <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column
       prop="id"
       label="ID"
@@ -156,9 +158,9 @@
 <script setup>
 import { Plus, Delete } from '@element-plus/icons-vue'
 import { ref, reactive, onMounted } from 'vue'
-import { ElMessage, ElUpload } from 'element-plus'
+import { ElMessage, ElUpload, ElMessageBox } from 'element-plus'
 import dayjs from 'dayjs'
-import { generateMockData, mockAddStaff, mockEditStaff, mockDeleteStaff } from '@/mock/staff'
+import { generateMockData, mockAddStaff, mockEditStaff, mockDeleteStaff, mockBatchDeleteStaff } from '@/mock/staff'
 
 // 弹窗相关
 const dialogVisible = ref(false)
@@ -202,12 +204,19 @@ const tableData = reactive({
   list: [],
   total: 0
 })
+// 选中行数组
+const selectedRows = ref([])
 
 // 分页相关
 const paginationData = reactive({
   pageNum: 1,
   pageSize: 10,
 })
+
+// 处理选中行变化
+const handleSelectionChange = (rows) => {
+  selectedRows.value = rows
+}
 
 // 获取陪护列表
 const getStaffList = () => {
@@ -325,9 +334,9 @@ const handleEdit = (row) => {
   dialogVisible.value = true
 }
 
-// 处理删除按钮点击
+// 处理单个删除按钮点击
 const handleDelete = (row) => {
-  ElMessage.confirm('确定要删除这个陪护人员吗？', '删除确认', {
+  ElMessageBox.confirm('确定要删除这个陪护人员吗？', '删除确认', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -342,6 +351,49 @@ const handleDelete = (row) => {
           tableData.list.splice(index, 1)
           tableData.total--
         }
+        ElMessage.success(response.message)
+      } else {
+        ElMessage.error(response.message || '删除失败')
+      }
+      tableLoading.value = false
+    }).catch(error => {
+      console.error('删除失败:', error)
+      ElMessage.error('删除失败')
+      tableLoading.value = false
+    })
+  }).catch(() => {
+    // 用户取消删除
+  })
+}
+
+// 处理批量删除按钮点击
+const handleBatchDelete = () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请选择要删除的陪护人员')
+    return
+  }
+  
+  ElMessageBox.confirm(`确定要删除选中的 ${selectedRows.value.length} 个陪护人员吗？`, '删除确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    tableLoading.value = true
+    // 获取选中行的id数组
+    const ids = selectedRows.value.map(row => row.id)
+    // 使用mock模拟批量删除接口调用
+    mockBatchDeleteStaff(ids).then(response => {
+      if (response.code === 10000) {
+        // 从表格数据中删除选中的行
+        selectedRows.value.forEach(row => {
+          const index = tableData.list.findIndex(item => item.id === row.id)
+          if (index !== -1) {
+            tableData.list.splice(index, 1)
+            tableData.total--
+          }
+        })
+        // 清空选中行
+        selectedRows.value = []
         ElMessage.success(response.message)
       } else {
         ElMessage.error(response.message || '删除失败')
