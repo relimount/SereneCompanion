@@ -87,3 +87,12 @@ export function menuPermissions() {
         method: 'get',
     })
 }
+
+// 陪护师创建
+export function companion(data) {
+    return request({
+        url: '/companion',
+        method: 'post',
+        data
+    })
+}
