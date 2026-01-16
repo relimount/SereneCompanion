@@ -1,5 +1,175 @@
-# Vue 3 + Vite
+# SereneCompanion - 陪诊服务管理系统
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 项目概述
+SereneCompanion 是一个现代化的陪诊服务管理系统，基于 Vue 3 + Element Plus 构建，提供完整的订单管理、陪护人员管理、用户管理和数据可视化功能。系统采用前后端分离架构，使用课程提供的 RESTful API 接口，前端实现了响应式布局和现代化的用户界面。
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+本项目作为个人学习与实践的作品集，展示了 Vue 3 生态系统的综合应用能力、前端工程化实践和数据可视化实现能力。
+
+## 功能特性
+
+### 核心功能
+- **订单管理**：实现订单的增删改查、状态管理和详情查看
+- **陪护人员管理**：支持陪护人员信息的添加、编辑、删除和状态管理
+- **用户管理**：实现用户的权限控制和角色管理
+- **数据可视化**：通过控制台展示系统运行数据和统计图表
+- **响应式设计**：适配不同屏幕尺寸的设备
+
+### 控制台功能（个人重点实现）
+- **核心数据统计**：总订单数、今日新增订单、待处理订单、已完成订单、陪护人员总数、可用陪护人员
+- **数据可视化图表**：
+  - 订单状态分布饼图（ECharts 实现）
+  - 订单趋势分析折线图（ECharts 实现）
+  - 服务类型分布柱状图（ECharts 实现）
+- **最近动态展示**：
+  - 最近创建的订单列表
+  - 最近新增的陪护人员列表
+
+### 技术亮点
+- 基于 Vue 3 Composition API 实现组件逻辑，代码结构清晰
+- 使用 ECharts 实现数据可视化，展示多种类型图表
+- 采用 localStorage 实现模拟数据的本地存储
+- 实现响应式布局，适配不同设备
+- 代码模块化设计，便于维护和扩展
+- 模拟完整的 API 接口调用流程，便于与后端对接
+
+## 技术栈
+
+### 前端技术
+- **框架**：Vue 3
+- **UI 组件库**：Element Plus
+- **路由**：Vue Router
+- **状态管理**：Pinia（可选）
+- **HTTP 客户端**：Axios
+- **图表库**：ECharts
+- **日期处理**：Day.js
+- **构建工具**：Vite
+
+## 项目结构
+
+```
+SereneCompanion/
+├── admin/                  # 管理后台前端（个人实现）
+│   ├── public/            # 静态资源
+│   ├── src/               # 源代码
+│   │   ├── assets/        # 资源文件
+│   │   ├── components/    # 公共组件
+│   │   ├── mock/          # 模拟数据
+│   │   ├── router/        # 路由配置
+│   │   ├── views/         # 页面视图
+│   │   │   ├── auth/      # 权限管理
+│   │   │   ├── dashboard/ # 控制台
+│   │   │   └── vppz/      # 陪护管理
+│   │   ├── App.vue        # 根组件
+│   │   └── main.js        # 入口文件
+│   ├── index.html         # HTML 模板
+│   ├── package.json       # 项目配置
+│   └── vite.config.js     # Vite 配置
+├── server/                # 后端服务（课程提供）
+└── README.md              # 项目说明
+```
+
+## 快速开始
+
+### 安装依赖
+```bash
+# 进入管理后台目录
+cd admin
+
+# 安装依赖
+npm install
+```
+
+### 运行项目
+```bash
+# 开发模式运行
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 预览生产版本
+npm run preview
+```
+
+### 访问系统
+开发模式下，系统默认运行在 http://localhost:5173
+
+## 数据来源
+
+项目采用混合数据来源方式，部分数据来自模拟数据，部分数据设计为来自接口请求：
+
+### 模拟数据
+
+系统使用模拟数据进行开发和测试，主要模拟数据文件包括：
+
+- `mock/order.js`：订单数据模拟
+- `mock/staff.js`：陪护人员数据模拟
+- `mock/dashboard.js`：控制台统计数据模拟
+
+模拟数据使用 localStorage 进行本地存储，确保页面刷新后数据仍然保持。
+
+### 接口请求
+
+项目使用课程提供的 RESTful API 接口规范，实现了完整的接口调用流程。主要接口包括：
+
+- 订单管理接口：获取订单列表、创建订单、更新订单状态等
+- 用户管理接口：用户登录、权限验证等
+
+## 核心组件
+
+### 统计卡片组件 (statCard.vue)
+用于展示核心统计数据的卡片组件，支持自定义标题、数值、图标和趋势信息。
+
+### 导航组件
+- `aside.vue`：侧边导航栏
+- `navHeader.vue`：顶部导航栏
+
+### 页面视图
+- `dashboard/index.vue`：控制台页面
+- `vppz/order/index.vue`：订单管理页面
+- `vppz/staff/index.vue`：陪护人员管理页面
+
+## 数据说明
+
+### 订单状态
+- 待支付：用户已下单但尚未支付
+- 已支付：用户已支付订单
+- 已完成：订单已完成服务
+- 已取消：订单已取消
+
+### 服务类型
+- 日常陪护
+- 康复陪护
+- 术后陪护
+- 临时陪护
+- 长期陪护
+
+## 开发说明
+
+### 代码规范
+- 使用 Vue 3 Composition API
+- 遵循 ESLint 和 Prettier 代码规范
+- 组件命名采用 PascalCase
+- 文件命名采用 kebab-case
+
+## 个人贡献
+
+作为项目的主要开发者，我负责了以下核心工作：
+
+1. **前端架构设计**：基于 Vue 3 + Element Plus 搭建项目架构，实现响应式布局
+2. **组件开发**：开发了统计卡片、图表展示等可复用组件
+3. **数据可视化实现**：使用 ECharts 实现了多种数据可视化图表
+4. **模拟数据系统**：设计并实现了基于 localStorage 的模拟数据系统
+5. **控制台功能**：完成了控制台的核心数据统计和动态展示功能
+6. **代码优化**：进行了代码模块化设计和性能优化
+
+## 项目收获
+
+通过本项目的开发，我掌握了以下技术和能力：
+
+1. **Vue 3 生态系统**：熟练掌握 Vue 3 Composition API、Vue Router、Element Plus 等技术
+2. **前端工程化**：了解 Vite 构建工具、ESLint 代码规范等前端工程化实践
+3. **数据可视化**：能够使用 ECharts 实现多种类型的图表展示
+4. **响应式设计**：掌握了响应式布局和适配不同设备的开发技巧
+5. **API 调用**：掌握了 RESTful API 接口调用流程和前后端交互方式
+6. **问题解决**：具备独立分析和解决技术问题的能力
