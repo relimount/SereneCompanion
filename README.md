@@ -5,6 +5,9 @@ SereneCompanion 是一个现代化的陪诊服务管理系统，基于 Vue 3 + E
 
 本项目作为个人学习与实践的作品集，展示了 Vue 3 生态系统的综合应用能力、前端工程化实践和数据可视化实现能力。
 
+### 线上演示
+- **项目地址**：[https://serene-companion.vercel.app/](https://serene-companion.vercel.app/)
+
 ## 功能特性
 
 ### 核心功能
@@ -92,7 +95,8 @@ npm run preview
 ```
 
 ### 访问系统
-开发模式下，系统默认运行在 http://localhost:5173
+- **本地开发**：开发模式下，系统默认运行在 http://localhost:5173
+- **线上演示**：[https://serene-companion.vercel.app/](https://serene-companion.vercel.app/)
 
 ## 数据来源
 
